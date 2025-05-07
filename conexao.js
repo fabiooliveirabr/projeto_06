@@ -4,7 +4,7 @@ const db = mysql.createConnection({
     port: 3306,
     user: 'root',
     password: 'root',
-    database: 'base_escola',
+    database: 'bd_sistema_senai2',
     dateStrings: true
 });
 db.connect((erro)=>{
