@@ -9,10 +9,10 @@ function carregarConteudo(){
             dados.forEach(function(item){
                 $("#caixa_conteudo").append(`
                     <div class='cartoes'>
-                        <b> Nº ${item.codigo} </b> <br>
-                        Descrição: ${item.descricao} <br>
-                        Setor: ${item.setor} <br>
-                        Categoria: ${item.categoria}
+                        <b> Nº <span id='codigo'>${item.codigo}</span> </b> <br>
+                        Descrição: <span id='descricao'>${item.descricao}</span><br>
+                        Setor: <span id='setor'>${item.setor}</span><br>
+                        Categoria: <span id='categoria'>${item.categoria} </span>
                     </div>
                 `)
             })
@@ -27,7 +27,8 @@ function carregarConteudo(){
 $(document).ready(function(){
     carregarConteudo();
     $("#tela_escura").hide();
-    $("#formulario_cadastro").hide();    
+    $("#formulario_cadastro").hide();
+    $("#formulario_editar").hide();
 })
 
 $("#btn_fechar_form_cad").click(function(){
@@ -39,6 +40,7 @@ $("#btn_cadastrar").click(function(){
     var descricao = $("#caixa_descricao").val();
     var setor = $("#caixa_setor").val();
     var categoria = $("#caixa_categoria").val();
+    
 
     //Cadastrar itens POST /inventarios
     $.ajax({
@@ -60,3 +62,56 @@ $("#btn_cadastrar").click(function(){
         }
     })
 })//Fim do click no btn_cadastrar
+
+
+$("#btn_mais").click(function(){
+    $("#tela_escura").show();
+    $("#formulario_cadastro").show();
+    $("#formulario_editar").hide();
+})
+
+$("#btn_pesquisar").click(function(){
+    $("#caixa_conteudo").html("");
+    $("#carregando").show();
+    var codigo = $("#caixa_pesquisa").val();
+    if(codigo == ""){ 
+        alert("Digite algo para pesquisar");
+    }
+    $.ajax({
+        url: "http://localhost:3000/inventarios/"+codigo,
+        type: "GET",
+        dataType: "json",
+        success: function(dados){
+            $("#carregando").hide()
+            if(dados.length >=1){
+                    dados.forEach(function(item){
+                    $("#caixa_conteudo").append(`
+                        <div class='cartoes'>
+                            <b> Nº <span id='codigo'>${item.codigo}</span> </b> <br>
+                            Descrição: <span id='descricao'>${item.descricao}</span><br>
+                            Setor: <span id='setor'>${item.setor}</span><br>
+                            Categoria: <span id='categoria'>${item.categoria} </span>
+                        </div>
+                      `)
+                    })
+            }else{
+                $("#caixa_conteudo").html("<h2> Nada encontrado 🫤</h2>")
+            }
+        },
+        error: function(){
+            alert("Falha ao acessar GET/ inventarios/:codigo")
+        }
+    })
+
+})//Fim do click no btn_pesquisar
+
+$(document).on("click",".cartoes",function(){
+    $("#tela_escura").show();
+    $("#formulario_editar").show();
+})
+
+$("#btn_fechar_form_editar").click(function(){
+    $("#tela_escura").hide();
+    $("#formulario_editar").hide();
+})
+

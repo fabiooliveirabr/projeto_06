@@ -64,7 +64,7 @@ body{
     align-items: center;
     justify-content: center;
 }
-#formulario_cadastro{
+#formulario_cadastro, #formulario_editar{
     background-color: white;
     width: 350px;
     height: 350px;
